@@ -59,6 +59,10 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "apps.users",
+    "apps.customers",
+    "apps.inventory",
+    "apps.quotations",
+    "apps.ai_assistant",
     "apps.ledger",
     "apps.payments",
     "apps.audit",
@@ -236,6 +240,7 @@ REST_FRAMEWORK = {
 # JWT Configuration
 # Use separate JWT signing key if provided, otherwise fall back to SECRET_KEY
 JWT_SIGNING_KEY = os.environ.get("JWT_SIGNING_KEY", SECRET_KEY)
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=24),

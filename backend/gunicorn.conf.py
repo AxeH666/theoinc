@@ -12,6 +12,7 @@ errorlog = "-"
 accesslog = "-"
 loglevel = "info"
 capture_output = True
+timeout = 120
 
 # Gunicorn applies dictConfig; Django's LOGGING replaces its handlers
 logconfig_dict = settings.LOGGING
