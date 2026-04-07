@@ -5,6 +5,8 @@ import requests
 from apps.ai_assistant.models import CustomerQuery, CustomerQueryIntent
 from apps.ai_assistant.rag import search_knowledge
 from apps.customers.models import Customer
+from apps.inventory.models import SolarComponent
+from apps.quotations.models import Quotation, QuotationItem
 
 
 GEMINI_API_URL = (
@@ -100,6 +102,43 @@ def generate_gemini_response(query_text, context_chunks):
     return "I could not generate a response at the moment."
 
 
+def create_auto_quotation(query_text, customer):
+    quotation = Quotation.objects.create(
+        customer=customer,
+        title=f"Auto-Quote: {query_text[:50]}",
+        status="draft",
+    )
+
+    panel = (
+        SolarComponent.objects.filter(component_type="panel", stock_quantity__gt=0)
+        .order_by("unit_price", "name")
+        .first()
+    )
+    inverter = (
+        SolarComponent.objects.filter(component_type="inverter", stock_quantity__gt=0)
+        .order_by("unit_price", "name")
+        .first()
+    )
+
+    for component in [panel, inverter]:
+        if component is None:
+            continue
+        QuotationItem.objects.create(
+            quotation=quotation,
+            component=component,
+            quantity=1,
+            unit_price=component.unit_price,
+            line_total=component.unit_price,
+        )
+
+    if not quotation.items.exists():
+        quotation.delete()
+        return None
+
+    quotation.calculate_total()
+    return quotation
+
+
 def handle_customer_query(query_text, customer_id=None):
     context_chunks = search_knowledge(query_text)
     intent = detect_intent(query_text)
@@ -109,9 +148,18 @@ def handle_customer_query(query_text, customer_id=None):
     if customer_id:
         customer = Customer.objects.filter(pk=customer_id).first()
 
-    return CustomerQuery.objects.create(
+    customer_query = CustomerQuery.objects.create(
         customer=customer,
         query_text=query_text,
         intent=intent,
         response_text=response_text,
     )
+    quotation = None
+
+    if intent == CustomerQueryIntent.QUOTATION_REQUEST:
+        try:
+            quotation = create_auto_quotation(query_text, customer)
+        except Exception:
+            quotation = None
+
+    return customer_query, (quotation.id if quotation else None)

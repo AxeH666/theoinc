@@ -1,28 +1,46 @@
-asgiref==3.11.1
-python-dotenv==1.0.1
-black==24.4.2
-click==8.3.1
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+# Core Django
 Django==4.2.11
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.1
-flake8==7.3.0
-mccabe==0.7.0
-mypy_extensions==1.1.0
-packaging==26.0
-pathspec==1.0.4
-platformdirs==4.8.0
+asgiref==3.8.1
+sqlparse==0.5.3
+pytz>=2023.3
+
+# Auth & Security
+PyJWT==2.8.0
+bcrypt>=4.0.1
+
+# Database
 psycopg2-binary==2.9.9
-pycodestyle==2.14.0
-pyflakes==3.4.0
-PyJWT==2.11.0
-pytokens==0.4.1
-pytz==2025.2
-sqlparse==0.5.5
-gunicorn
-reportlab==4.2.5
-openpyxl==3.1.5
+
+# Server
+gunicorn>=21.2.0
+
+# API & HTTP
 requests>=2.31.0
-coverage>=7.0
-redis>=5.0
+python-dotenv>=1.0.0
+httpx>=0.27.0
+
+# AI/ML - pinned for compatibility
+torch==2.3.0+cpu
+numpy>=1.24.0,<2.0
+sentence-transformers==3.0.1
+transformers>=4.41.0
 chromadb>=0.5.5
-sentence-transformers>=3.0.1
+
+# PDF
+reportlab>=4.0.0
+pillow>=10.0.0
+
+# Excel
+openpyxl>=3.1.0
+
+# Redis
+redis>=5.0
+
+# Dev tools
+black>=24.0.0
+flake8>=7.0.0
+coverage>=7.0

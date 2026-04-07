@@ -18,6 +18,8 @@ class Quotation(models.Model):
     customer = models.ForeignKey(
         "customers.Customer",
         on_delete=models.CASCADE,
+        null=True,
+        blank=True,
         related_name="quotations",
     )
     title = models.CharField(max_length=255)
@@ -40,7 +42,8 @@ class Quotation(models.Model):
         ordering = ["-created_at", "title"]
 
     def __str__(self):
-        return f"{self.title} - {self.customer.name}"
+        customer_name = self.customer.name if self.customer else "Walk-in Customer"
+        return f"{self.title} - {customer_name}"
 
     def calculate_total(self):
         """Recalculate and persist the quotation total from all line items."""

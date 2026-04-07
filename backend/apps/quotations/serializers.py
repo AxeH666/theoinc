@@ -30,6 +30,8 @@ class QuotationSerializer(serializers.ModelSerializer):
         source="customer",
         queryset=Customer.objects.all(),
         write_only=True,
+        required=False,
+        allow_null=True,
     )
     items = QuotationItemSerializer(many=True, read_only=True)
 

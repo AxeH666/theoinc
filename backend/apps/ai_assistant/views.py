@@ -42,9 +42,12 @@ def chat(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    customer_query = handle_customer_query(
+    customer_query, quotation_id = handle_customer_query(
         query_text=query_text,
         customer_id=customer_id,
     )
     serializer = CustomerQuerySerializer(customer_query)
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
+    response_data = dict(serializer.data)
+    if quotation_id:
+        response_data["quotation_id"] = quotation_id
+    return Response(response_data, status=status.HTTP_201_CREATED)

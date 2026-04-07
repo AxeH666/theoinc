@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Incetekh Solar OS Demo</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --panel: #111827;
+      --panel-soft: #1f2937;
+      --border: #2d3748;
+      --text: #f9fafb;
+      --muted: #94a3b8;
+      --accent: #f97316;
+      --accent-soft: rgba(249, 115, 22, 0.15);
+      --danger: #ef4444;
+      --success: #22c55e;
+      --blue: #3b82f6;
+      --purple: #8b5cf6;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(249, 115, 22, 0.18), transparent 28%),
+        linear-gradient(135deg, #020617, #0f172a 55%, #111827);
+      color: var(--text);
+    }
+    .hidden { display: none !important; }
+    .shell {
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .login-wrap {
+      min-height: calc(100vh - 48px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(17, 24, 39, 0.92);
+      border: 1px solid rgba(249, 115, 22, 0.2);
+      border-radius: 22px;
+      padding: 32px;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(12px);
+    }
+    .title {
+      margin: 0 0 8px;
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .subtitle {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    label {
+      display: block;
+      margin: 16px 0 8px;
+      color: #e5e7eb;
+      font-size: 14px;
+    }
+    input, textarea, button {
+      font: inherit;
+    }
+    input {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 14px 16px;
+      outline: none;
+    }
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.18);
+    }
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 18px;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+    button:hover { transform: translateY(-1px); }
+    button:disabled { opacity: 0.6; cursor: wait; transform: none; }
+    .btn-primary {
+      background: linear-gradient(135deg, #fb923c, var(--accent));
+      color: white;
+      font-weight: 700;
+      width: 100%;
+      margin-top: 24px;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .error, .status {
+      margin-top: 14px;
+      font-size: 14px;
+      color: #fecaca;
+    }
+    .dashboard {
+      display: grid;
+      gap: 22px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      background: rgba(17, 24, 39, 0.88);
+      border: 1px solid rgba(249, 115, 22, 0.16);
+      border-radius: 18px;
+      padding: 18px 22px;
+      backdrop-filter: blur(10px);
+    }
+    .brand {
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .content {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+      gap: 22px;
+    }
+    .panel {
+      background: rgba(17, 24, 39, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      padding: 20px;
+      min-height: 420px;
+    }
+    .panel h2 {
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+    .panel p {
+      margin: 0 0 18px;
+      color: var(--muted);
+    }
+    .chat-log {
+      min-height: 360px;
+      max-height: 62vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-right: 4px;
+    }
+    .bubble {
+      max-width: 82%;
+      padding: 14px 16px;
+      border-radius: 18px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .bubble.user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #ea580c, #f97316);
+      color: white;
+      border-bottom-right-radius: 6px;
+    }
+    .bubble.ai {
+      align-self: flex-start;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom-left-radius: 6px;
+    }
+    .bubble-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+    .badge.quotation_request { background: rgba(249, 115, 22, 0.16); color: #fdba74; }
+    .badge.service_request { background: rgba(59, 130, 246, 0.16); color: #93c5fd; }
+    .badge.product_inquiry { background: rgba(139, 92, 246, 0.16); color: #c4b5fd; }
+    .badge.general { background: rgba(34, 197, 94, 0.16); color: #86efac; }
+    .chat-input {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .stats-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .stat-card {
+      border: 1px solid rgba(249, 115, 22, 0.1);
+      border-radius: 16px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(249, 115, 22, 0.08), rgba(255,255,255,0.02));
+    }
+    .stat-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .stat-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+    }
+    a.quote-link {
+      color: #fdba74;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    a.quote-link:hover { text-decoration: underline; }
+    @media (max-width: 920px) {
+      .content { grid-template-columns: 1fr; }
+      .chat-input { grid-template-columns: 1fr; }
+      .bubble { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section id="loginPage" class="login-wrap">
+      <div class="card">
+        <h1 class="title">Incetekh Solar OS</h1>
+        <p class="subtitle">Sign in to access AI-assisted solar operations.</p>
+        <label for="username">Username</label>
+        <input id="username" type="text" autocomplete="username" placeholder="Enter username" />
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" placeholder="Enter password" />
+        <button id="loginButton" class="btn-primary">Login</button>
+        <div id="loginError" class="error hidden"></div>
+      </div>
+    </section>
+
+    <section id="dashboardPage" class="dashboard hidden">
+      <div class="topbar">
+        <div>
+          <div class="brand">Incetekh Solar OS</div>
+          <div class="subtitle">AI-assisted quoting, service support, and business visibility.</div>
+        </div>
+        <button id="logoutButton" class="btn-secondary">Logout</button>
+      </div>
+
+      <div class="content">
+        <div class="panel">
+          <h2>AI Chat</h2>
+          <p>Ask for a quote, product explanation, or service help.</p>
+          <div id="chatLog" class="chat-log"></div>
+          <div class="chat-input">
+            <input id="chatInput" type="text" placeholder="Ask about solar systems, pricing, or service..." />
+            <button id="sendButton" class="btn-primary" style="width:auto;">Send</button>
+          </div>
+          <div id="chatStatus" class="status hidden"></div>
+        </div>
+
+        <div class="panel">
+          <h2>Quick Stats</h2>
+          <p>Live operational counts from your API.</p>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Customers</div>
+              <div id="customersCount" class="stat-value">-</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Inventory Components</div>
+              <div id="inventoryCount" class="stat-value">-</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Quotations</div>
+              <div id="quotationsCount" class="stat-value">-</div>
+            </div>
+          </div>
+          <div class="stat-actions">
+            <button id="refreshStatsButton" class="btn-secondary">Refresh</button>
+            <span id="statsStatus" class="status hidden"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const loginPage = document.getElementById("loginPage");
+    const dashboardPage = document.getElementById("dashboardPage");
+    const loginButton = document.getElementById("loginButton");
+    const logoutButton = document.getElementById("logoutButton");
+    const loginError = document.getElementById("loginError");
+    const chatInput = document.getElementById("chatInput");
+    const sendButton = document.getElementById("sendButton");
+    const chatLog = document.getElementById("chatLog");
+    const chatStatus = document.getElementById("chatStatus");
+    const refreshStatsButton = document.getElementById("refreshStatsButton");
+    const statsStatus = document.getElementById("statsStatus");
+    const counts = {
+      customers: document.getElementById("customersCount"),
+      inventory: document.getElementById("inventoryCount"),
+      quotations: document.getElementById("quotationsCount"),
+    };
+
+    const TOKEN_KEY = "theoinc_demo_token";
+    const API_BASE = "";
+
+    function getToken() {
+      return localStorage.getItem(TOKEN_KEY);
+    }
+
+    function setToken(token) {
+      localStorage.setItem(TOKEN_KEY, token);
+    }
+
+    function clearToken() {
+      localStorage.removeItem(TOKEN_KEY);
+    }
+
+    function showLogin() {
+      loginPage.classList.remove("hidden");
+      dashboardPage.classList.add("hidden");
+    }
+
+    function showDashboard() {
+      loginPage.classList.add("hidden");
+      dashboardPage.classList.remove("hidden");
+      loadStats();
+    }
+
+    function setMessage(element, text, isError = false) {
+      if (!text) {
+        element.textContent = "";
+        element.classList.add("hidden");
+        return;
+      }
+      element.textContent = text;
+      element.style.color = isError ? "#fca5a5" : "#94a3b8";
+      element.classList.remove("hidden");
+    }
+
+    async function apiFetch(path, options = {}) {
+      const headers = new Headers(options.headers || {});
+      const token = getToken();
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      if (!headers.has("Content-Type") && options.body) {
+        headers.set("Content-Type", "application/json");
+      }
+
+      const response = await fetch(`${API_BASE}${path}`, {
+        ...options,
+        headers,
+      });
+
+      const contentType = response.headers.get("content-type") || "";
+      const data = contentType.includes("application/json") ? await response.json() : null;
+
+      if (!response.ok) {
+        const detail =
+          data?.error?.message ||
+          data?.detail ||
+          `Request failed with status ${response.status}`;
+        throw new Error(detail);
+      }
+
+      return data;
+    }
+
+    function extractCount(payload) {
+      if (!payload) return 0;
+      if (typeof payload.count === "number") return payload.count;
+      if (Array.isArray(payload.results)) return payload.results.length;
+      if (Array.isArray(payload.data)) return payload.data.length;
+      if (Array.isArray(payload)) return payload.length;
+      return 0;
+    }
+
+    function appendBubble(text, type, meta = {}) {
+      const bubble = document.createElement("div");
+      bubble.className = `bubble ${type}`;
+      bubble.textContent = text;
+
+      if (type === "ai") {
+        const metaRow = document.createElement("div");
+        metaRow.className = "bubble-meta";
+
+        const left = document.createElement("div");
+        if (meta.intent) {
+          const badge = document.createElement("span");
+          badge.className = `badge ${meta.intent}`;
+          badge.textContent = meta.intent.replaceAll("_", " ");
+          left.appendChild(badge);
+        }
+
+        const right = document.createElement("div");
+        if (meta.quotationId) {
+          const link = document.createElement("a");
+          link.className = "quote-link";
+          link.href = `${API_BASE}/api/v1/quotations/${meta.quotationId}/pdf/`;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = "Download Quote PDF";
+          right.appendChild(link);
+        }
+
+        metaRow.appendChild(left);
+        metaRow.appendChild(right);
+        bubble.appendChild(metaRow);
+      }
+
+      chatLog.appendChild(bubble);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    async function login() {
+      loginButton.disabled = true;
+      setMessage(loginError, "");
+      try {
+        const payload = await apiFetch("/api/v1/auth/login", {
+          method: "POST",
+          body: JSON.stringify({
+            username: document.getElementById("username").value.trim(),
+            password: document.getElementById("password").value,
+          }),
+        });
+        const token = payload?.data?.token;
+        if (!token) {
+          throw new Error("Login succeeded but no token was returned.");
+        }
+        setToken(token);
+        showDashboard();
+      } catch (error) {
+        setMessage(loginError, error.message, true);
+      } finally {
+        loginButton.disabled = false;
+      }
+    }
+
+    async function loadStats() {
+      refreshStatsButton.disabled = true;
+      setMessage(statsStatus, "Refreshing stats...");
+      try {
+        const [customers, inventory, quotations] = await Promise.all([
+          apiFetch("/api/v1/customers/"),
+          apiFetch("/api/v1/inventory/components/"),
+          apiFetch("/api/v1/quotations/"),
+        ]);
+        counts.customers.textContent = extractCount(customers);
+        counts.inventory.textContent = extractCount(inventory);
+        counts.quotations.textContent = extractCount(quotations);
+        setMessage(statsStatus, "Stats updated.");
+      } catch (error) {
+        setMessage(statsStatus, error.message, true);
+      } finally {
+        refreshStatsButton.disabled = false;
+      }
+    }
+
+    async function sendMessage() {
+      const query = chatInput.value.trim();
+      if (!query) return;
+
+      appendBubble(query, "user");
+      chatInput.value = "";
+      sendButton.disabled = true;
+      setMessage(chatStatus, "Thinking...");
+
+      try {
+        const payload = await apiFetch("/api/v1/ai-assistant/chat/", {
+          method: "POST",
+          headers: {
+            "Idempotency-Key": crypto.randomUUID(),
+          },
+          body: JSON.stringify({
+            query,
+            customer_id: null,
+          }),
+        });
+
+        appendBubble(payload.response_text || "No response received.", "ai", {
+          intent: payload.intent || "general",
+          quotationId: payload.quotation_id || null,
+        });
+        setMessage(chatStatus, "");
+        loadStats();
+      } catch (error) {
+        setMessage(chatStatus, error.message, true);
+      } finally {
+        sendButton.disabled = false;
+      }
+    }
+
+    loginButton.addEventListener("click", login);
+    logoutButton.addEventListener("click", () => {
+      clearToken();
+      chatLog.innerHTML = "";
+      showLogin();
+    });
+    refreshStatsButton.addEventListener("click", loadStats);
+    sendButton.addEventListener("click", sendMessage);
+    chatInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+
+    if (getToken()) {
+      showDashboard();
+    } else {
+      showLogin();
+    }
+  </script>
+</body>
+</html>

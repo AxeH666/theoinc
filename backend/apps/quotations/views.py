@@ -1,9 +1,13 @@
+from io import BytesIO
+
+from django.http import FileResponse
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from apps.quotations.models import Quotation, QuotationItem
+from apps.quotations.pdf import generate_quotation_pdf
 from apps.quotations.serializers import QuotationItemSerializer, QuotationSerializer
 
 
@@ -20,6 +24,18 @@ class QuotationViewSet(ModelViewSet):
         total = quotation.calculate_total()
         serializer = self.get_serializer(quotation)
         return Response({"total_amount": total, "quotation": serializer.data})
+
+    @action(detail=True, methods=["get"], url_path="pdf")
+    def pdf(self, request, pk=None):
+        quotation = self.get_object()
+        pdf_bytes = generate_quotation_pdf(quotation.id)
+        filename = f"incetekh_quote_{quotation.id}.pdf"
+        return FileResponse(
+            BytesIO(pdf_bytes),
+            content_type="application/pdf",
+            as_attachment=True,
+            filename=filename,
+        )
 
 
 class QuotationItemViewSet(ModelViewSet):
