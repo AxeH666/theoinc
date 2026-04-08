@@ -3,255 +3,350 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Incetekh Solar OS Demo</title>
+  <title>Incetekh Solar OS</title>
   <style>
     :root {
-      --bg: #0b1120;
-      --panel: rgba(17, 24, 39, 0.9);
-      --panel-soft: #1f2937;
-      --border: #2d3748;
-      --text: #f9fafb;
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --panel-soft: #334155;
+      --border: rgba(148, 163, 184, 0.22);
+      --text: #ffffff;
       --muted: #94a3b8;
       --accent: #f97316;
-      --accent-soft: rgba(249, 115, 22, 0.12);
+      --accent-soft: rgba(249, 115, 22, 0.16);
       --danger: #ef4444;
-      --success: #22c55e;
+      --danger-soft: rgba(239, 68, 68, 0.18);
       --blue: #3b82f6;
+      --blue-soft: rgba(59, 130, 246, 0.18);
+      --green: #22c55e;
+      --green-soft: rgba(34, 197, 94, 0.18);
       --grey: #9ca3af;
-      --red-soft: rgba(239, 68, 68, 0.15);
-      --green-soft: rgba(34, 197, 94, 0.15);
-      --blue-soft: rgba(59, 130, 246, 0.15);
-      --grey-soft: rgba(156, 163, 175, 0.15);
+      --grey-soft: rgba(156, 163, 175, 0.18);
+      --shadow: 0 24px 60px rgba(2, 6, 23, 0.45);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background:
-        radial-gradient(circle at top, rgba(249, 115, 22, 0.18), transparent 28%),
-        linear-gradient(135deg, #020617, #0f172a 55%, #111827);
+        radial-gradient(circle at top, rgba(249, 115, 22, 0.12), transparent 30%),
+        linear-gradient(180deg, #020617, var(--bg));
       color: var(--text);
     }
-    .hidden { display: none !important; }
-    .shell { min-height: 100vh; padding: 24px; }
-    .login-wrap {
-      min-height: calc(100vh - 48px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .card, .panel, .modal-card, .topbar {
-      background: var(--panel);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
-      backdrop-filter: blur(12px);
-    }
-    .card {
-      width: 100%;
-      max-width: 420px;
-      border-radius: 22px;
-      padding: 32px;
-    }
-    .title {
-      margin: 0 0 8px;
-      font-size: 30px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-    }
-    .subtitle {
-      margin: 0 0 22px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-    label {
-      display: block;
-      margin: 16px 0 8px;
-      color: #e5e7eb;
-      font-size: 14px;
-    }
-    input, select, textarea, button {
+
+    button,
+    input,
+    select,
+    textarea {
       font: inherit;
     }
-    input, select, textarea {
-      width: 100%;
-      border: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.95);
-      color: var(--text);
-      border-radius: 14px;
-      padding: 14px 16px;
-      outline: none;
-    }
-    textarea { min-height: 100px; resize: vertical; }
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.18);
-    }
+
     button {
       border: 0;
       border-radius: 14px;
-      padding: 12px 16px;
       cursor: pointer;
-      transition: transform 0.15s ease, opacity 0.15s ease;
+      transition: transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
     }
-    button:hover { transform: translateY(-1px); }
-    button:disabled { opacity: 0.6; cursor: wait; transform: none; }
-    .btn-primary {
-      background: linear-gradient(135deg, #fb923c, var(--accent));
-      color: white;
-      font-weight: 700;
+
+    button:hover {
+      transform: translateY(-1px);
     }
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.06);
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+      transform: none;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      background: #0f172a;
       color: var(--text);
       border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px 14px;
+      outline: none;
     }
-    .btn-link {
-      background: transparent;
-      color: #fdba74;
-      padding: 0;
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.16);
     }
-    .error, .status {
-      margin-top: 14px;
-      font-size: 14px;
-      color: #fecaca;
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
     }
-    .dashboard {
-      display: grid;
-      gap: 22px;
+
+    .hidden {
+      display: none !important;
     }
-    .topbar {
+
+    .page {
+      width: min(1280px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 24px 0 32px;
+    }
+
+    .card,
+    .topbar,
+    .tabbar,
+    .section-card,
+    .modal-card {
+      background: rgba(30, 41, 59, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .auth-wrap {
+      min-height: 100vh;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      gap: 16px;
-      border-radius: 18px;
-      padding: 18px 22px;
+      justify-content: center;
+      padding: 24px;
     }
-    .brand { font-size: 24px; font-weight: 700; }
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 2.3fr) minmax(320px, 1fr);
-      gap: 22px;
+
+    .card {
+      width: min(420px, 100%);
+      border-radius: 24px;
+      padding: 32px;
     }
-    .panel {
-      border-radius: 20px;
-      padding: 20px;
-      min-height: 420px;
-    }
-    .panel h2 {
-      margin: 0 0 6px;
-      font-size: 20px;
-    }
-    .panel p {
-      margin: 0 0 18px;
-      color: var(--muted);
-    }
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-    .tab-button {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border);
-      color: var(--muted);
+
+    .title {
+      margin: 0 0 8px;
+      font-size: 32px;
       font-weight: 700;
     }
-    .tab-button.active {
-      color: white;
-      border-color: rgba(249, 115, 22, 0.35);
-      background: var(--accent-soft);
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
     }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
+
+    .auth-actions {
+      margin-top: 24px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 24px;
+      border-radius: 22px;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .tabbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 8px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+
+    .tab-button {
+      padding: 12px 16px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid transparent;
+      font-weight: 700;
+    }
+
+    .tab-button.active {
+      background: var(--accent-soft);
+      color: var(--text);
+      border-color: rgba(249, 115, 22, 0.32);
+    }
+
+    .section-card {
+      border-radius: 24px;
+      padding: 22px;
+    }
+
+    .section-panel {
+      display: none;
+    }
+
+    .section-panel.active {
+      display: block;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2,
+    .section-head h3 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .section-copy {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .chat-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .chat-column,
+    .stats-column {
+      min-width: 0;
+    }
+
     .chat-log {
-      min-height: 320px;
-      max-height: 54vh;
+      height: 420px;
       overflow-y: auto;
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      background: rgba(15, 23, 42, 0.72);
+      padding: 18px;
       display: flex;
       flex-direction: column;
       gap: 14px;
-      padding-right: 4px;
     }
+
     .bubble {
       max-width: 85%;
       padding: 14px 16px;
       border-radius: 18px;
-      line-height: 1.5;
+      line-height: 1.55;
       white-space: pre-wrap;
     }
+
     .bubble.user {
       align-self: flex-end;
-      background: linear-gradient(135deg, #ea580c, #f97316);
+      background: linear-gradient(135deg, #ea580c, var(--accent));
       color: white;
       border-bottom-right-radius: 6px;
     }
+
     .bubble.ai {
       align-self: flex-start;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(148, 163, 184, 0.14);
       border-bottom-left-radius: 6px;
     }
+
     .bubble-meta {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      gap: 10px;
+      justify-content: space-between;
+      gap: 12px;
       margin-top: 10px;
-      font-size: 12px;
-      color: var(--muted);
+      flex-wrap: wrap;
     }
-    .chat-input {
+
+    .chat-input-row {
       display: grid;
       grid-template-columns: 1fr auto;
       gap: 12px;
-      margin-top: 18px;
+      margin-top: 16px;
     }
-    .toolbar {
+
+    .stats-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .stat-card {
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid rgba(249, 115, 22, 0.12);
+      background: linear-gradient(180deg, rgba(249, 115, 22, 0.12), rgba(255, 255, 255, 0.03));
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    .toolbar-actions {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 14px;
+      gap: 10px;
+      flex-wrap: wrap;
     }
-    .toolbar h3 {
-      margin: 0;
-      font-size: 18px;
-    }
+
     .table-wrap {
       overflow: auto;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      background: rgba(15, 23, 42, 0.66);
     }
+
     table {
       width: 100%;
-      border-collapse: collapse;
       min-width: 720px;
+      border-collapse: collapse;
     }
-    th, td {
+
+    th,
+    td {
       padding: 14px 16px;
       text-align: left;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
       font-size: 14px;
     }
+
     th {
+      color: #e2e8f0;
       background: rgba(255, 255, 255, 0.04);
-      color: #e5e7eb;
       position: sticky;
       top: 0;
-      z-index: 1;
     }
-    td { color: #dbe4ee; }
+
+    td {
+      color: #e5e7eb;
+    }
+
     .empty-state {
-      padding: 22px 18px;
+      padding: 22px 16px;
       color: var(--muted);
     }
-    .badge {
+
+    .badge,
+    .status-badge {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
       border-radius: 999px;
       padding: 6px 10px;
@@ -259,264 +354,297 @@
       font-weight: 700;
       text-transform: capitalize;
     }
-    .badge.quotation_request { background: rgba(249, 115, 22, 0.16); color: #fdba74; }
-    .badge.service_request { background: rgba(59, 130, 246, 0.16); color: #93c5fd; }
-    .badge.product_inquiry { background: rgba(139, 92, 246, 0.16); color: #c4b5fd; }
-    .badge.general { background: rgba(34, 197, 94, 0.16); color: #86efac; }
-    .status-badge {
-      display: inline-flex;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
+
+    .badge {
+      background: rgba(249, 115, 22, 0.14);
+      color: #fdba74;
+    }
+
+    .status-badge.draft {
+      color: #d1d5db;
+      background: var(--grey-soft);
+    }
+
+    .status-badge.sent {
+      color: #93c5fd;
+      background: var(--blue-soft);
+    }
+
+    .status-badge.accepted {
+      color: #86efac;
+      background: var(--green-soft);
+    }
+
+    .status-badge.rejected {
+      color: #fca5a5;
+      background: var(--danger-soft);
+    }
+
+    .btn-primary {
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #fb923c, var(--accent));
+      color: white;
       font-weight: 700;
-      text-transform: capitalize;
     }
-    .status-badge.draft { background: var(--grey-soft); color: #d1d5db; }
-    .status-badge.sent { background: var(--blue-soft); color: #93c5fd; }
-    .status-badge.accepted { background: var(--green-soft); color: #86efac; }
-    .status-badge.rejected { background: var(--red-soft); color: #fca5a5; }
-    .stats-grid {
-      display: grid;
-      gap: 14px;
+
+    .btn-secondary {
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border: 1px solid var(--border);
     }
-    .stat-card {
-      border: 1px solid rgba(249, 115, 22, 0.1);
-      border-radius: 16px;
-      padding: 16px;
-      background: linear-gradient(180deg, rgba(249, 115, 22, 0.08), rgba(255,255,255,0.02));
+
+    .btn-link {
+      padding: 0;
+      background: transparent;
+      color: #fdba74;
+      border-radius: 0;
     }
-    .stat-label {
+
+    .status {
+      margin-top: 14px;
+      font-size: 14px;
       color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 8px;
     }
-    .stat-value {
-      font-size: 28px;
-      font-weight: 700;
+
+    .status.error {
+      color: #fca5a5;
     }
-    .right-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-top: 18px;
-    }
+
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(2, 6, 23, 0.78);
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 24px;
+      background: rgba(2, 6, 23, 0.78);
       z-index: 1000;
     }
+
     .modal-card {
-      width: 100%;
-      max-width: 560px;
-      border-radius: 22px;
+      width: min(560px, 100%);
+      border-radius: 24px;
       padding: 24px;
     }
+
     .modal-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 12px;
       margin-bottom: 12px;
     }
+
     .modal-title {
       margin: 0;
       font-size: 22px;
     }
+
     .modal-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
     }
+
     .field-full {
       grid-column: 1 / -1;
     }
+
     .modal-actions {
       display: flex;
       justify-content: flex-end;
       gap: 10px;
       margin-top: 18px;
     }
-    .small {
-      font-size: 13px;
-      color: var(--muted);
+
+    label {
+      display: block;
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: #e2e8f0;
     }
-    @media (max-width: 1080px) {
-      .dashboard-grid { grid-template-columns: 1fr; }
+
+    @media (max-width: 980px) {
+      .chat-layout {
+        grid-template-columns: 1fr;
+      }
     }
+
     @media (max-width: 720px) {
-      .shell { padding: 14px; }
-      .chat-input, .modal-grid { grid-template-columns: 1fr; }
-      .bubble { max-width: 100%; }
-      .topbar, .toolbar, .right-actions { flex-direction: column; align-items: stretch; }
+      .page {
+        width: min(100vw - 20px, 100%);
+        padding-top: 12px;
+      }
+
+      .topbar,
+      .section-head,
+      .modal-header,
+      .modal-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .chat-input-row,
+      .modal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bubble {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="shell">
-    <section id="loginPage" class="login-wrap">
-      <div class="card">
-        <h1 class="title">Incetekh Solar OS</h1>
-        <p class="subtitle">Sign in to access AI-assisted solar operations.</p>
-        <label for="username">Username</label>
-        <input id="username" type="text" autocomplete="username" placeholder="Enter username" />
-        <label for="password">Password</label>
-        <input id="password" type="password" autocomplete="current-password" placeholder="Enter password" />
-        <button id="loginButton" class="btn-primary">Login</button>
-        <div id="loginError" class="error hidden"></div>
+  <section id="authGate" class="auth-wrap hidden">
+    <div class="card">
+      <h1 class="title">Incetekh Solar OS</h1>
+      <p class="subtitle">You need to sign in before using the demo dashboard.</p>
+      <div class="auth-actions">
+        <a href="/demo/login/"><button type="button" class="btn-primary">Go to Login</button></a>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section id="dashboardPage" class="dashboard hidden">
-      <div class="topbar">
-        <div>
-          <div class="brand">Incetekh Solar OS</div>
-          <div class="subtitle">AI-assisted quoting, inventory, customers, and quotation management.</div>
-        </div>
-        <button id="logoutButton" class="btn-secondary">Logout</button>
+  <main id="appPage" class="page hidden">
+    <header class="topbar">
+      <div>
+        <h1 class="brand">Incetekh Solar OS</h1>
+        <p class="subtitle">AI-assisted quoting, inventory, customer, and quotation workflows.</p>
       </div>
+      <button id="logoutButton" type="button" class="btn-secondary">Logout</button>
+    </header>
 
-      <div class="dashboard-grid">
-        <div class="panel">
-          <div class="tabs">
-            <button class="tab-button active" data-tab="chatTab">AI Chat</button>
-            <button class="tab-button" data-tab="inventoryTab">Inventory</button>
-            <button class="tab-button" data-tab="customersTab">Customers</button>
-            <button class="tab-button" data-tab="quotationsTab">Quotations</button>
-          </div>
+    <nav class="tabbar" aria-label="Primary navigation">
+      <button type="button" class="tab-button active" data-tab="chat">AI Chat</button>
+      <button type="button" class="tab-button" data-tab="inventory">Inventory</button>
+      <button type="button" class="tab-button" data-tab="customers">Customers</button>
+      <button type="button" class="tab-button" data-tab="quotations">Quotations</button>
+    </nav>
 
-          <section id="chatTab" class="tab-panel active">
+    <section class="section-card">
+      <section id="chatSection" class="section-panel active" data-panel="chat">
+        <div class="section-head">
+          <div>
             <h2>AI Chat</h2>
-            <p>Ask for a quote, product explanation, or service help.</p>
+            <p class="section-copy">Ask for a quote, product explanation, or service guidance.</p>
+          </div>
+        </div>
+        <div class="chat-layout">
+          <div class="chat-column">
             <div id="chatLog" class="chat-log"></div>
-            <div class="chat-input">
+            <div class="chat-input-row">
               <input id="chatInput" type="text" placeholder="Ask about solar systems, pricing, or service..." />
-              <button id="sendButton" class="btn-primary">Send</button>
+              <button id="sendButton" type="button" class="btn-primary">Send</button>
             </div>
             <div id="chatStatus" class="status hidden"></div>
-          </section>
-
-          <section id="inventoryTab" class="tab-panel">
-            <div class="toolbar">
-              <div>
-                <h3>Inventory Components</h3>
-                <div class="small">All solar stock components currently in the system.</div>
-              </div>
-              <div>
-                <button id="refreshInventoryButton" class="btn-secondary">Refresh</button>
-                <button id="openInventoryModalButton" class="btn-primary">Add Component</button>
-              </div>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Brand</th>
-                    <th>Unit Price (Rs)</th>
-                    <th>Stock</th>
-                    <th>Min Stock</th>
-                  </tr>
-                </thead>
-                <tbody id="inventoryTableBody"></tbody>
-              </table>
-            </div>
-            <div id="inventoryStatus" class="status hidden"></div>
-          </section>
-
-          <section id="customersTab" class="tab-panel">
-            <div class="toolbar">
-              <div>
-                <h3>Customers</h3>
-                <div class="small">Residential and commercial customer records.</div>
-              </div>
-              <div>
-                <button id="refreshCustomersButton" class="btn-secondary">Refresh</button>
-                <button id="openCustomerModalButton" class="btn-primary">Add Customer</button>
-              </div>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Type</th>
-                    <th>Created</th>
-                  </tr>
-                </thead>
-                <tbody id="customersTableBody"></tbody>
-              </table>
-            </div>
-            <div id="customersStatus" class="status hidden"></div>
-          </section>
-
-          <section id="quotationsTab" class="tab-panel">
-            <div class="toolbar">
-              <div>
-                <h3>Quotations</h3>
-                <div class="small">All generated and manually created quotations.</div>
-              </div>
-              <button id="refreshQuotationsButton" class="btn-secondary">Refresh</button>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Customer</th>
-                    <th>Status</th>
-                    <th>Total Amount (Rs)</th>
-                    <th>Created</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody id="quotationsTableBody"></tbody>
-              </table>
-            </div>
-            <div id="quotationsStatus" class="status hidden"></div>
-          </section>
-        </div>
-
-        <div class="panel">
-          <h2>Quick Stats</h2>
-          <p>Live operational counts from your API.</p>
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-label">Customers</div>
-              <div id="customersCount" class="stat-value">-</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Inventory Components</div>
-              <div id="inventoryCount" class="stat-value">-</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Quotations</div>
-              <div id="quotationsCount" class="stat-value">-</div>
-            </div>
           </div>
-          <div class="right-actions">
-            <button id="refreshStatsButton" class="btn-secondary">Refresh</button>
-            <span id="statsStatus" class="status hidden"></span>
+          <aside class="stats-column">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-label">Inventory Components</div>
+                <div id="inventoryCount" class="stat-value">-</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Customers</div>
+                <div id="customersCount" class="stat-value">-</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Quotations</div>
+                <div id="quotationsCount" class="stat-value">-</div>
+              </div>
+            </div>
+            <div id="statsStatus" class="status hidden"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="inventorySection" class="section-panel" data-panel="inventory">
+        <div class="section-head">
+          <div>
+            <h2>Inventory</h2>
+            <p class="section-copy">Current component stock loaded from the inventory API.</p>
+          </div>
+          <div class="toolbar-actions">
+            <button id="addInventoryButton" type="button" class="btn-primary">Add Component</button>
           </div>
         </div>
-      </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Brand</th>
+                <th>Unit Price (Rs)</th>
+                <th>Stock</th>
+              </tr>
+            </thead>
+            <tbody id="inventoryTableBody"></tbody>
+          </table>
+        </div>
+        <div id="inventoryStatus" class="status hidden"></div>
+      </section>
+
+      <section id="customersSection" class="section-panel" data-panel="customers">
+        <div class="section-head">
+          <div>
+            <h2>Customers</h2>
+            <p class="section-copy">Residential and commercial customer records.</p>
+          </div>
+          <div class="toolbar-actions">
+            <button id="addCustomerButton" type="button" class="btn-primary">Add Customer</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Type</th>
+              </tr>
+            </thead>
+            <tbody id="customersTableBody"></tbody>
+          </table>
+        </div>
+        <div id="customersStatus" class="status hidden"></div>
+      </section>
+
+      <section id="quotationsSection" class="section-panel" data-panel="quotations">
+        <div class="section-head">
+          <div>
+            <h2>Quotations</h2>
+            <p class="section-copy">Saved quotations with PDF export access.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Total Amount (Rs)</th>
+                <th>Created</th>
+                <th>PDF</th>
+              </tr>
+            </thead>
+            <tbody id="quotationsTableBody"></tbody>
+          </table>
+        </div>
+        <div id="quotationsStatus" class="status hidden"></div>
+      </section>
     </section>
-  </div>
+  </main>
 
-  <div id="inventoryModal" class="modal hidden">
+  <div id="inventoryModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="inventoryModalTitle">
     <div class="modal-card">
       <div class="modal-header">
-        <h3 class="modal-title">Add Component</h3>
-        <button class="btn-secondary" data-close-modal="inventoryModal">Close</button>
+        <h3 id="inventoryModalTitle" class="modal-title">Add Component</h3>
+        <button type="button" class="btn-secondary" data-close-modal="inventoryModal">Close</button>
       </div>
       <form id="inventoryForm">
         <div class="modal-grid">
@@ -553,19 +681,19 @@
           </div>
         </div>
         <div class="modal-actions">
-          <button type="button" class="btn-secondary" data-close-modal="inventoryModal">Cancel</button>
-          <button type="submit" class="btn-primary">Save Component</button>
+          <button type="button" class="btn-secondary" data-close-modal="inventoryModal">Close</button>
+          <button type="submit" class="btn-primary">Submit</button>
         </div>
         <div id="inventoryFormStatus" class="status hidden"></div>
       </form>
     </div>
   </div>
 
-  <div id="customerModal" class="modal hidden">
+  <div id="customerModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="customerModalTitle">
     <div class="modal-card">
       <div class="modal-header">
-        <h3 class="modal-title">Add Customer</h3>
-        <button class="btn-secondary" data-close-modal="customerModal">Close</button>
+        <h3 id="customerModalTitle" class="modal-title">Add Customer</h3>
+        <button type="button" class="btn-secondary" data-close-modal="customerModal">Close</button>
       </div>
       <form id="customerForm">
         <div class="modal-grid">
@@ -594,8 +722,8 @@
           </div>
         </div>
         <div class="modal-actions">
-          <button type="button" class="btn-secondary" data-close-modal="customerModal">Cancel</button>
-          <button type="submit" class="btn-primary">Save Customer</button>
+          <button type="button" class="btn-secondary" data-close-modal="customerModal">Close</button>
+          <button type="submit" class="btn-primary">Submit</button>
         </div>
         <div id="customerFormStatus" class="status hidden"></div>
       </form>
@@ -604,18 +732,15 @@
 
   <script>
     const API_BASE = "http://localhost:8000";
-    const TOKEN_KEY = "theoinc_demo_token";
+    const TOKEN_KEY = "token";
 
-    const loginPage = document.getElementById("loginPage");
-    const dashboardPage = document.getElementById("dashboardPage");
-    const loginButton = document.getElementById("loginButton");
+    const authGate = document.getElementById("authGate");
+    const appPage = document.getElementById("appPage");
     const logoutButton = document.getElementById("logoutButton");
-    const loginError = document.getElementById("loginError");
-    const chatInput = document.getElementById("chatInput");
     const sendButton = document.getElementById("sendButton");
+    const chatInput = document.getElementById("chatInput");
     const chatLog = document.getElementById("chatLog");
     const chatStatus = document.getElementById("chatStatus");
-    const refreshStatsButton = document.getElementById("refreshStatsButton");
     const statsStatus = document.getElementById("statsStatus");
     const inventoryStatus = document.getElementById("inventoryStatus");
     const customersStatus = document.getElementById("customersStatus");
@@ -629,31 +754,55 @@
     const customerForm = document.getElementById("customerForm");
     const inventoryModal = document.getElementById("inventoryModal");
     const customerModal = document.getElementById("customerModal");
+
     const counts = {
-      customers: document.getElementById("customersCount"),
       inventory: document.getElementById("inventoryCount"),
+      customers: document.getElementById("customersCount"),
       quotations: document.getElementById("quotationsCount"),
     };
 
-    let inventoryItems = [];
-    let customerItems = [];
-    let quotationItems = [];
+    const tabLoaders = {
+      inventory: loadInventory,
+      customers: loadCustomers,
+      quotations: loadQuotations,
+      chat: loadStats,
+    };
+
+    const loadedTabs = {
+      inventory: false,
+      customers: false,
+      quotations: false,
+      chat: false,
+    };
 
     function getToken() {
       return localStorage.getItem(TOKEN_KEY);
-    }
-
-    function setToken(token) {
-      localStorage.setItem(TOKEN_KEY, token);
     }
 
     function clearToken() {
       localStorage.removeItem(TOKEN_KEY);
     }
 
-    function formatDate(value) {
-      if (!value) return "-";
-      return new Date(value).toLocaleDateString();
+    function setStatus(element, text, isError = false) {
+      if (!text) {
+        element.textContent = "";
+        element.classList.add("hidden");
+        element.classList.remove("error");
+        return;
+      }
+
+      element.textContent = text;
+      element.classList.remove("hidden");
+      element.classList.toggle("error", isError);
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
     }
 
     function formatCurrency(value) {
@@ -661,43 +810,43 @@
       return Number.isFinite(numeric) ? numeric.toFixed(2) : "0.00";
     }
 
-    function setMessage(element, text, isError = false) {
-      if (!text) {
-        element.textContent = "";
-        element.classList.add("hidden");
-        return;
+    function formatDate(value) {
+      if (!value) {
+        return "-";
       }
-      element.textContent = text;
-      element.style.color = isError ? "#fca5a5" : "#94a3b8";
-      element.classList.remove("hidden");
+
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) {
+        return "-";
+      }
+
+      return date.toLocaleString();
     }
 
-    function showLogin() {
-      loginPage.classList.remove("hidden");
-      dashboardPage.classList.add("hidden");
+    function normalizeList(payload) {
+      if (Array.isArray(payload)) return payload;
+      if (Array.isArray(payload?.results)) return payload.results;
+      if (Array.isArray(payload?.data)) return payload.data;
+      return [];
     }
 
-    function showDashboard() {
-      loginPage.classList.add("hidden");
-      dashboardPage.classList.remove("hidden");
-      refreshAll();
-    }
-
-    function openModal(modal) {
-      modal.classList.remove("hidden");
-    }
-
-    function closeModal(modal) {
-      modal.classList.add("hidden");
+    function getCount(payload, items) {
+      if (typeof payload?.count === "number") {
+        return payload.count;
+      }
+      return items.length;
     }
 
     async function apiFetch(path, options = {}) {
-      const headers = new Headers(options.headers || {});
       const token = getToken();
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
+      if (!token) {
+        throw new Error("Please log in to continue.");
       }
-      if (!headers.has("Content-Type") && options.body) {
+
+      const headers = new Headers(options.headers || {});
+      headers.set("Authorization", `Bearer ${token}`);
+
+      if (options.body && !headers.has("Content-Type")) {
         headers.set("Content-Type", "application/json");
       }
 
@@ -710,26 +859,53 @@
       const data = contentType.includes("application/json") ? await response.json() : null;
 
       if (!response.ok) {
-        const detail =
+        const message =
           data?.error?.message ||
           data?.detail ||
           `Request failed with status ${response.status}`;
-        throw new Error(detail);
+        throw new Error(message);
       }
 
       return data;
     }
 
-    function normalizeList(payload) {
-      if (Array.isArray(payload)) return payload;
-      if (Array.isArray(payload?.results)) return payload.results;
-      if (Array.isArray(payload?.data)) return payload.data;
-      return [];
+    function openModal(modal) {
+      modal.classList.remove("hidden");
     }
 
-    function extractCount(payload, fallbackList = []) {
-      if (typeof payload?.count === "number") return payload.count;
-      return fallbackList.length;
+    function closeModal(modal) {
+      modal.classList.add("hidden");
+    }
+
+    function renderEmptyRow(target, colspan, message) {
+      target.innerHTML = `<tr><td class="empty-state" colspan="${colspan}">${escapeHtml(message)}</td></tr>`;
+    }
+
+    function updateTabButtons(activeTab) {
+      document.querySelectorAll(".tab-button").forEach((button) => {
+        button.classList.toggle("active", button.dataset.tab === activeTab);
+      });
+    }
+
+    function updatePanels(activeTab) {
+      document.querySelectorAll(".section-panel").forEach((panel) => {
+        panel.classList.toggle("active", panel.dataset.panel === activeTab);
+      });
+    }
+
+    async function activateTab(tabName) {
+      updateTabButtons(tabName);
+      updatePanels(tabName);
+
+      const loader = tabLoaders[tabName];
+      if (!loader) {
+        return;
+      }
+
+      if (tabName === "chat" || !loadedTabs[tabName]) {
+        await loader();
+        loadedTabs[tabName] = true;
+      }
     }
 
     function appendBubble(text, type, meta = {}) {
@@ -737,27 +913,26 @@
       bubble.className = `bubble ${type}`;
       bubble.textContent = text;
 
-      if (type === "ai") {
+      if (type === "ai" && (meta.intent || meta.quotationId)) {
         const metaRow = document.createElement("div");
         metaRow.className = "bubble-meta";
 
         const left = document.createElement("div");
         if (meta.intent) {
           const badge = document.createElement("span");
-          badge.className = `badge ${meta.intent}`;
+          badge.className = "badge";
           badge.textContent = meta.intent.replaceAll("_", " ");
           left.appendChild(badge);
         }
 
         const right = document.createElement("div");
-        if (meta.quotationId) {
-          const link = document.createElement("a");
-          link.className = "btn-link";
-          link.href = `${API_BASE}/api/v1/quotations/${meta.quotationId}/pdf/`;
-          link.target = "_blank";
-          link.rel = "noopener noreferrer";
-          link.textContent = "Download Quote PDF";
-          right.appendChild(link);
+        if (meta.intent === "quotation_request" && meta.quotationId) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "btn-link";
+          button.textContent = "Download Quote PDF";
+          button.addEventListener("click", () => downloadQuotationPdf(meta.quotationId, chatStatus));
+          right.appendChild(button);
         }
 
         metaRow.appendChild(left);
@@ -769,159 +944,119 @@
       chatLog.scrollTop = chatLog.scrollHeight;
     }
 
-    function renderEmptyRow(target, colspan, message) {
-      target.innerHTML = `<tr><td colspan="${colspan}" class="empty-state">${message}</td></tr>`;
-    }
-
     function renderInventoryTable(items) {
       if (!items.length) {
-        renderEmptyRow(inventoryTableBody, 6, "No components found yet.");
+        renderEmptyRow(inventoryTableBody, 5, "No components found.");
         return;
       }
+
       inventoryTableBody.innerHTML = items.map((item) => `
         <tr>
-          <td>${item.name || "-"}</td>
-          <td>${item.component_type || "-"}</td>
-          <td>${item.brand || "-"}</td>
+          <td>${escapeHtml(item.name || "-")}</td>
+          <td>${escapeHtml(item.component_type || "-")}</td>
+          <td>${escapeHtml(item.brand || "-")}</td>
           <td>${formatCurrency(item.unit_price)}</td>
           <td>${item.stock_quantity ?? 0}</td>
-          <td>${item.minimum_stock_level ?? 0}</td>
         </tr>
       `).join("");
     }
 
     function renderCustomersTable(items) {
       if (!items.length) {
-        renderEmptyRow(customersTableBody, 5, "No customers found yet.");
+        renderEmptyRow(customersTableBody, 4, "No customers found.");
         return;
       }
+
       customersTableBody.innerHTML = items.map((item) => `
         <tr>
-          <td>${item.name || "-"}</td>
-          <td>${item.phone || "-"}</td>
-          <td>${item.email || "-"}</td>
-          <td>${item.customer_type || "-"}</td>
-          <td>${formatDate(item.created_at)}</td>
+          <td>${escapeHtml(item.name || "-")}</td>
+          <td>${escapeHtml(item.phone || "-")}</td>
+          <td>${escapeHtml(item.email || "-")}</td>
+          <td>${escapeHtml(item.customer_type || "-")}</td>
         </tr>
       `).join("");
     }
 
     function renderQuotationsTable(items) {
       if (!items.length) {
-        renderEmptyRow(quotationsTableBody, 7, "No quotations found yet.");
+        renderEmptyRow(quotationsTableBody, 6, "No quotations found.");
         return;
       }
+
       quotationsTableBody.innerHTML = items.map((item) => `
         <tr>
-          <td>${item.id || "-"}</td>
-          <td>${item.title || "-"}</td>
-          <td>${item.customer?.name || "Walk-in Customer"}</td>
-          <td><span class="status-badge ${item.status || "draft"}">${item.status || "draft"}</span></td>
+          <td>${escapeHtml(item.id || "-")}</td>
+          <td>${escapeHtml(item.customer?.name || "Walk-in Customer")}</td>
+          <td><span class="status-badge ${escapeHtml(item.status || "draft")}">${escapeHtml(item.status || "draft")}</span></td>
           <td>${formatCurrency(item.total_amount)}</td>
           <td>${formatDate(item.created_at)}</td>
-          <td>
-            <a
-              class="btn-link"
-              href="${API_BASE}/api/v1/quotations/${item.id}/pdf/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >Download PDF</a>
-          </td>
+          <td><button type="button" class="btn-link" data-quotation-id="${escapeHtml(item.id || "")}">Download PDF</button></td>
         </tr>
       `).join("");
     }
 
-    async function login() {
-      loginButton.disabled = true;
-      setMessage(loginError, "");
-      try {
-        const payload = await apiFetch("/api/v1/auth/login", {
-          method: "POST",
-          body: JSON.stringify({
-            username: document.getElementById("username").value.trim(),
-            password: document.getElementById("password").value,
-          }),
-        });
-        const token = payload?.data?.token;
-        if (!token) {
-          throw new Error("Login succeeded but no token was returned.");
-        }
-        setToken(token);
-        showDashboard();
-      } catch (error) {
-        setMessage(loginError, error.message, true);
-      } finally {
-        loginButton.disabled = false;
-      }
-    }
-
     async function loadInventory() {
-      setMessage(inventoryStatus, "Loading inventory...");
+      setStatus(inventoryStatus, "Loading inventory...");
       try {
         const payload = await apiFetch("/api/v1/inventory/components/");
-        inventoryItems = normalizeList(payload);
-        renderInventoryTable(inventoryItems);
-        counts.inventory.textContent = extractCount(payload, inventoryItems);
-        setMessage(inventoryStatus, "");
+        const items = normalizeList(payload);
+        renderInventoryTable(items);
+        counts.inventory.textContent = getCount(payload, items);
+        setStatus(inventoryStatus, "");
       } catch (error) {
-        renderEmptyRow(inventoryTableBody, 6, "Could not load inventory.");
-        setMessage(inventoryStatus, error.message, true);
+        renderEmptyRow(inventoryTableBody, 5, "Could not load inventory.");
+        setStatus(inventoryStatus, error.message, true);
       }
     }
 
     async function loadCustomers() {
-      setMessage(customersStatus, "Loading customers...");
+      setStatus(customersStatus, "Loading customers...");
       try {
         const payload = await apiFetch("/api/v1/customers/");
-        customerItems = normalizeList(payload);
-        renderCustomersTable(customerItems);
-        counts.customers.textContent = extractCount(payload, customerItems);
-        setMessage(customersStatus, "");
+        const items = normalizeList(payload);
+        renderCustomersTable(items);
+        counts.customers.textContent = getCount(payload, items);
+        setStatus(customersStatus, "");
       } catch (error) {
-        renderEmptyRow(customersTableBody, 5, "Could not load customers.");
-        setMessage(customersStatus, error.message, true);
+        renderEmptyRow(customersTableBody, 4, "Could not load customers.");
+        setStatus(customersStatus, error.message, true);
       }
     }
 
     async function loadQuotations() {
-      setMessage(quotationsStatus, "Loading quotations...");
+      setStatus(quotationsStatus, "Loading quotations...");
       try {
         const payload = await apiFetch("/api/v1/quotations/");
-        quotationItems = normalizeList(payload);
-        renderQuotationsTable(quotationItems);
-        counts.quotations.textContent = extractCount(payload, quotationItems);
-        setMessage(quotationsStatus, "");
+        const items = normalizeList(payload);
+        renderQuotationsTable(items);
+        counts.quotations.textContent = getCount(payload, items);
+        setStatus(quotationsStatus, "");
       } catch (error) {
-        renderEmptyRow(quotationsTableBody, 7, "Could not load quotations.");
-        setMessage(quotationsStatus, error.message, true);
+        renderEmptyRow(quotationsTableBody, 6, "Could not load quotations.");
+        setStatus(quotationsStatus, error.message, true);
       }
     }
 
     async function loadStats() {
-      refreshStatsButton.disabled = true;
-      setMessage(statsStatus, "Refreshing stats...");
+      setStatus(statsStatus, "Refreshing counts...");
       try {
-        await Promise.all([loadCustomers(), loadInventory(), loadQuotations()]);
-        setMessage(statsStatus, "Stats updated.");
+        await Promise.all([loadInventory(), loadCustomers(), loadQuotations()]);
+        setStatus(statsStatus, "");
       } catch (error) {
-        setMessage(statsStatus, error.message, true);
-      } finally {
-        refreshStatsButton.disabled = false;
+        setStatus(statsStatus, error.message, true);
       }
-    }
-
-    async function refreshAll() {
-      await loadStats();
     }
 
     async function sendMessage() {
       const query = chatInput.value.trim();
-      if (!query) return;
+      if (!query) {
+        return;
+      }
 
       appendBubble(query, "user");
       chatInput.value = "";
       sendButton.disabled = true;
-      setMessage(chatStatus, "Thinking...");
+      setStatus(chatStatus, "Thinking...");
 
       try {
         const payload = await apiFetch("/api/v1/ai-assistant/chat/", {
@@ -936,13 +1071,15 @@
         });
 
         appendBubble(payload.response_text || "No response received.", "ai", {
-          intent: payload.intent || "general",
+          intent: payload.intent || "",
           quotationId: payload.quotation_id || null,
         });
-        setMessage(chatStatus, "");
-        loadQuotations();
+
+        setStatus(chatStatus, "");
+        loadedTabs.quotations = false;
+        await loadQuotations();
       } catch (error) {
-        setMessage(chatStatus, error.message, true);
+        setStatus(chatStatus, error.message, true);
       } finally {
         sendButton.disabled = false;
       }
@@ -950,13 +1087,14 @@
 
     async function submitInventoryForm(event) {
       event.preventDefault();
+
       const formData = new FormData(inventoryForm);
       const payload = Object.fromEntries(formData.entries());
       payload.unit_price = Number(payload.unit_price);
       payload.stock_quantity = Number(payload.stock_quantity);
       payload.minimum_stock_level = Number(payload.minimum_stock_level);
 
-      setMessage(inventoryFormStatus, "Saving component...");
+      setStatus(inventoryFormStatus, "Saving component...");
       try {
         await apiFetch("/api/v1/inventory/components/", {
           method: "POST",
@@ -965,22 +1103,25 @@
           },
           body: JSON.stringify(payload),
         });
+
         inventoryForm.reset();
         document.getElementById("inv_minimum_stock_level").value = 5;
         closeModal(inventoryModal);
-        setMessage(inventoryFormStatus, "");
+        setStatus(inventoryFormStatus, "");
+        loadedTabs.inventory = false;
         await loadInventory();
       } catch (error) {
-        setMessage(inventoryFormStatus, error.message, true);
+        setStatus(inventoryFormStatus, error.message, true);
       }
     }
 
     async function submitCustomerForm(event) {
       event.preventDefault();
+
       const formData = new FormData(customerForm);
       const payload = Object.fromEntries(formData.entries());
 
-      setMessage(customerFormStatus, "Saving customer...");
+      setStatus(customerFormStatus, "Saving customer...");
       try {
         await apiFetch("/api/v1/customers/", {
           method: "POST",
@@ -989,60 +1130,75 @@
           },
           body: JSON.stringify(payload),
         });
+
         customerForm.reset();
         closeModal(customerModal);
-        setMessage(customerFormStatus, "");
+        setStatus(customerFormStatus, "");
+        loadedTabs.customers = false;
         await loadCustomers();
       } catch (error) {
-        setMessage(customerFormStatus, error.message, true);
+        setStatus(customerFormStatus, error.message, true);
       }
     }
 
-    function activateTab(tabId) {
-      document.querySelectorAll(".tab-button").forEach((button) => {
-        button.classList.toggle("active", button.dataset.tab === tabId);
-      });
-      document.querySelectorAll(".tab-panel").forEach((panel) => {
-        panel.classList.toggle("active", panel.id === tabId);
-      });
+    async function downloadQuotationPdf(quotationId, statusTarget = quotationsStatus) {
+      if (!quotationId) {
+        return;
+      }
+
+      setStatus(statusTarget, "Downloading PDF...");
+      try {
+        const token = getToken();
+        if (!token) {
+          throw new Error("Please log in to continue.");
+        }
+
+        const response = await fetch(`${API_BASE}/api/v1/quotations/${quotationId}/pdf/`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Download failed with status ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `quotation-${quotationId}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+        setStatus(statusTarget, "");
+      } catch (error) {
+        setStatus(statusTarget, error.message, true);
+      }
+    }
+
+    function showAuthenticatedApp() {
+      authGate.classList.add("hidden");
+      appPage.classList.remove("hidden");
+    }
+
+    function showAuthGate() {
+      appPage.classList.add("hidden");
+      authGate.classList.remove("hidden");
     }
 
     document.querySelectorAll(".tab-button").forEach((button) => {
-      button.addEventListener("click", () => activateTab(button.dataset.tab));
+      button.addEventListener("click", () => {
+        activateTab(button.dataset.tab);
+      });
     });
 
     document.querySelectorAll("[data-close-modal]").forEach((button) => {
       button.addEventListener("click", () => {
         closeModal(document.getElementById(button.dataset.closeModal));
       });
-    });
-
-    loginButton.addEventListener("click", login);
-    logoutButton.addEventListener("click", () => {
-      clearToken();
-      chatLog.innerHTML = "";
-      showLogin();
-    });
-    refreshStatsButton.addEventListener("click", loadStats);
-    document.getElementById("refreshInventoryButton").addEventListener("click", loadInventory);
-    document.getElementById("refreshCustomersButton").addEventListener("click", loadCustomers);
-    document.getElementById("refreshQuotationsButton").addEventListener("click", loadQuotations);
-    document.getElementById("openInventoryModalButton").addEventListener("click", () => {
-      setMessage(inventoryFormStatus, "");
-      openModal(inventoryModal);
-    });
-    document.getElementById("openCustomerModalButton").addEventListener("click", () => {
-      setMessage(customerFormStatus, "");
-      openModal(customerModal);
-    });
-    inventoryForm.addEventListener("submit", submitInventoryForm);
-    customerForm.addEventListener("submit", submitCustomerForm);
-    sendButton.addEventListener("click", sendMessage);
-    chatInput.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        sendMessage();
-      }
     });
 
     [inventoryModal, customerModal].forEach((modal) => {
@@ -1053,10 +1209,46 @@
       });
     });
 
-    if (getToken()) {
-      showDashboard();
+    document.getElementById("addInventoryButton").addEventListener("click", () => {
+      setStatus(inventoryFormStatus, "");
+      openModal(inventoryModal);
+    });
+
+    document.getElementById("addCustomerButton").addEventListener("click", () => {
+      setStatus(customerFormStatus, "");
+      openModal(customerModal);
+    });
+
+    inventoryForm.addEventListener("submit", submitInventoryForm);
+    customerForm.addEventListener("submit", submitCustomerForm);
+
+    sendButton.addEventListener("click", sendMessage);
+    chatInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+
+    quotationsTableBody.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-quotation-id]");
+      if (!button) {
+        return;
+      }
+
+      downloadQuotationPdf(button.dataset.quotationId);
+    });
+
+    logoutButton.addEventListener("click", () => {
+      clearToken();
+      window.location.href = "/demo/login/";
+    });
+
+    if (!getToken()) {
+      showAuthGate();
     } else {
-      showLogin();
+      showAuthenticatedApp();
+      activateTab("chat");
     }
   </script>
 </body>
