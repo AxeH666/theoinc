@@ -44,6 +44,14 @@ services:
       timeout: 5s
       retries: 10
 
+  whatsapp:
+    build: ./theoinc-whatsapp
+    volumes:
+      - whatsapp_session:/app/.wwebjs_auth
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:
   hf_cache:
+  whatsapp_session:

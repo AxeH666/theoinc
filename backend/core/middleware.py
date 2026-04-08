@@ -59,6 +59,7 @@ class IdempotencyKeyMiddleware:
     EXCLUDED_PATHS = [
         "/api/v1/auth/login",
         "/api/v1/auth/logout",  # Logout is naturally idempotent
+        "/api/v1/ai-assistant/whatsapp/webhook/",
         "/api/health/",
     ]
 
