@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("demo/", TemplateView.as_view(template_name="demo.html")),
     path("api/health/", include("health.urls")),
     # API v1 (per docs/04_API_CONTRACT.md base path: /api/v1)
     path("api/v1/auth/", include("apps.auth.urls")),
